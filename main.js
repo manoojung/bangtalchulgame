@@ -302,7 +302,7 @@ function resetWholeGame() {
   isCleared = false;
   fadeAlpha = 0;
   isGameOver = false;
-  timeLeft = 180000;
+  timeLeft = 300000;
   timerStarted = false;
 
   initItems();
