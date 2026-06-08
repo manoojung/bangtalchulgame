@@ -373,3 +373,54 @@ function handleNpcDialogue() {
     lastTypeTime = millis();
   }
 }
+
+function drawPotOptionsBox() {
+  push(); rectMode(CENTER); textAlign(CENTER, CENTER); textSize(22);
+  fill(0, 220); stroke(255); strokeWeight(2);
+  rect(windowWidth / 2 - 160, windowHeight / 2, 220, 60, 10);
+  fill(255); noStroke(); text("항아리 깨기", windowWidth / 2 - 160, windowHeight / 2);
+  fill(0, 220); stroke(255); strokeWeight(2);
+  rect(windowWidth / 2 + 160, windowHeight / 2, 220, 60, 10);
+  fill(255); noStroke(); text("그대로 두기", windowWidth / 2 + 160, windowHeight / 2);
+  pop();
+}
+
+function drawDoorOptionsBox() {
+  push(); rectMode(CENTER); textAlign(CENTER, CENTER); textSize(22);
+  fill(0, 220); stroke(255); strokeWeight(2);
+  rect(windowWidth / 2 - 160, windowHeight / 2, 220, 60, 10);
+  fill(255); noStroke(); text("벽장 열기", windowWidth / 2 - 160, windowHeight / 2);
+  fill(0, 220); stroke(255); strokeWeight(2);
+  rect(windowWidth / 2 + 160, windowHeight / 2, 220, 60, 10);
+  fill(255); noStroke(); text("그대로 두기", windowWidth / 2 + 160, windowHeight / 2);
+  pop();
+}
+
+function drawStatueOptionsBox() {
+  push(); rectMode(CENTER); textAlign(CENTER, CENTER); textSize(18);
+  let hasHairpin = inventory.some(item => item.name === "비녀");
+  let btnY = windowHeight / 2;
+
+  if (hasHairpin) {
+    fill(0, 220); stroke(255); strokeWeight(2);
+    rect(windowWidth / 2 - 240, btnY, 200, 60, 10);
+    fill(255); noStroke(); text("비녀로 꺼내기", windowWidth / 2 - 240, btnY);
+
+    fill(0, 220); stroke(255); strokeWeight(2);
+    rect(windowWidth / 2, btnY, 200, 60, 10);
+    fill(255); noStroke(); text("손으로 꺼내기", windowWidth / 2, btnY);
+
+    fill(0, 220); stroke(255); strokeWeight(2);
+    rect(windowWidth / 2 + 240, btnY, 200, 60, 10);
+    fill(255); noStroke(); text("도끼로 꺼내기", windowWidth / 2 + 240, btnY);
+  } else {
+    fill(0, 220); stroke(255); strokeWeight(2);
+    rect(windowWidth / 2 - 120, btnY, 200, 60, 10);
+    fill(255); noStroke(); text("손으로 꺼내기", windowWidth / 2 - 120, btnY);
+
+    fill(0, 220); stroke(255); strokeWeight(2);
+    rect(windowWidth / 2 + 120, btnY, 200, 60, 10);
+    fill(255); noStroke(); text("도끼로 꺼내기", windowWidth / 2 + 120, btnY);
+  }
+  pop();
+}
