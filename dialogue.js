@@ -206,10 +206,14 @@ function handleRoomDialogue() {
     revealedLength = currentText.length;
     return;
   }
-  let currentText2 = dialogueLines[currentDialogueIndex];
-if (currentText2 === "< 안에 무언가가 들어있을 것만 같은 느낌이 든다. >") { showPotOptions = true; return; }
-if (currentText2 === "..낡은 문이다.") { showDoorOptions = true; return; }
-if (currentText2 === "< 동상의 입에 쪽지가 있다. 꺼내야 할 것 같다. >") { showStatueOptions = true; return; }
+  if (currentDialogueIndex === 0) {
+  if (dialogueLines[0] === "< 안에 무언가가 들어있을 것만 같은 느낌이 든다. >") { showPotOptions = true; return; }
+  if (dialogueLines[0] === "..낡은 문이다.") { showDoorOptions = true; return; }
+}
+if (dialogueLines[currentDialogueIndex] === "< 동상의 입에 쪽지가 있다. 꺼내야 할 것 같다. >") {
+  showStatueOptions = true;
+  return;
+}
   
   if (dialogueLines[0] === "이 천은 설마…") {
     if (currentDialogueIndex === 6 && metalClang) {
