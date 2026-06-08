@@ -157,6 +157,7 @@ function draw() {
   }
 
   if (gameState === "START_MENU") {
+   
     drawStartMenu();
     if (hasSavedGame) {
       push();
@@ -201,13 +202,11 @@ function draw() {
       }
     }
  
-   
+   if (showSavePopup) {
+  drawSavePopupBox();
+}
 
-    // 저장 팝업창이 활성화되었다면 화면에 그리기
-    if (showSavePopup) {
-      drawSavePopupBox();
-    }
-
+    
     let isZoomedRoom = (currentRoom === 0 && currentDialogueIndex >= 2 && currentDialogueIndex <= 4);
     if (isZoomedRoom) {
       push();
@@ -430,9 +429,10 @@ function mousePressed() {
   if (gameState === "START_MENU") {
     // 이어하기 버튼 클릭
     if (hasSavedGame && mouseX > windowWidth - 160 && mouseX < windowWidth - 20 && mouseY > 20 && mouseY < 65) {
-      loadGameData();
+  
       initItems();
       initSparkles();
+      loadGameData();
       return;
     }
 
