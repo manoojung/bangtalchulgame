@@ -483,6 +483,7 @@ function saveGameData() {
 }
 
 // [추가] 로컬스토리지에서 데이터를 읽어와 원상복구
+// [수정완료] 로컬스토리지에서 데이터를 읽어와 현재 프로젝트 명칭(동상)에 맞게 원상복구하는 함수
 function loadGameData() {
   let rawData = localStorage.getItem("dolsoe_save_data");
   if (!rawData) return;
@@ -496,15 +497,17 @@ function loadGameData() {
   // 2. 맵 아이템 상태들 복구
   if (saveObj.itemsState) {
     saveObj.itemsState.forEach(savedIt => {
-      let realItem = items.find(it => it.name === savedIt.name || (savedIt.name === "열린 사물함" && it.name === "사물함"));
+      // 기존의 '사물함'을 현재 프로젝트의 실제 아이템 명칭인 '동상' 및 '쪽지 꺼낸 동상'으로 일치시킵니다.
+      let realItem = items.find(it => it.name === savedIt.name || (savedIt.name === "쪽지 꺼낸 동상" && it.name === "동상"));
+      
       if (realItem) {
         realItem.room = savedIt.room;
         realItem.isCollected = savedIt.isCollected;
-        // 사물함 열린 상태 등의 그래픽 예외 원상복구 연동
-        if (savedIt.name === "열린 사물함" && realItem.name === "사물함") {
-          realItem.img = char2; 
-          realItem.name = "열린 사물함"; 
-          realItem.yRatio = 0.37;
+        
+        // 동상에서 이미 쪽지를 꺼낸 저장 상태였다면, 이름과 다이얼로그 대사를 기존 기획에 맞게 원상복구 연동
+        if (savedIt.name === "쪽지 꺼낸 동상" && realItem.name === "동상") {
+          realItem.name = "쪽지 꺼낸 동상";
+          realItem.dialogue = ["동상의 입안은 이제 텅 비어 있다."];
         }
       }
     });
@@ -514,15 +517,10 @@ function loadGameData() {
   inventory = [];
   if (saveObj.inventoryNames) {
     saveObj.inventoryNames.forEach(name => {
-      // items 데이터셋이나 임의의 수집 구조에서 원본 객체를 찾아 인벤토리에 다시 주입
-      let matchItem = items.find(it => it.name === name);
-      if (matchItem) {
-        inventory.push(matchItem);
+      let fullItem = items.find(it => it.name === name);
+      if (fullItem) {
+        inventory.push(fullItem);
       }
     });
   }
-
-  // 4. 화면 갱신 및 상태 전환
-  if (typeof updatePositions === 'function') updatePositions();
-  gameState = "GAME_PLAY";
 }
