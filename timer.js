@@ -1,5 +1,5 @@
-let timeLeft = 180000;
-const maxTime = 180000;
+let timeLeft = 300000;
+const maxTime = 300000;
 let isGameOver = false;
 let lastTextChecked = "";
 let timerStarted = false;
