@@ -1,6 +1,7 @@
 let items = [];
 let inventory = [];
 
+// 틀은 AI 를 활용함
 function initItems() {
   items = [
     { name: "자물쇠 문", room: 0, img: imgLockDoor, xRatio: 0.5, yRatio: 0.49, sizeRatio: 0.75, x: 0, y: 0, size: 0, isCollected: false, isGizmo: false },
@@ -36,12 +37,15 @@ function initItems() {
 }
 
 function drawRoomItems() {
+  // 전체 아이템 순회
   for (let i = 0; i < items.length; i++) {
     let item = items[i];
+    // 현재 방에 있고, 안 주운 아이템만 표시
     if (item.room === currentRoom && !item.isCollected) {
       push();
       if (item.img) {
         imageMode(CENTER);
+        // 바율 유지 (AI 활용) 
         let imgH = item.size * (item.img.height / item.img.width); 
         image(item.img, item.x, item.y, item.size, imgH);
       }
@@ -65,6 +69,7 @@ function drawInventoryBar() {
       push();
       if (inventory[i].img) {
         imageMode(CENTER);
+        // 이미지 비율 유지 (AI 활용) 
         let invH = 50 * (inventory[i].img.height / inventory[i].img.width);
         image(inventory[i].img, 200 + 90 * i, windowHeight-50, 50, invH);
       }
