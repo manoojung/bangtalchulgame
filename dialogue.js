@@ -539,6 +539,6 @@ function loadGameData() {
       if (fullItem) {
         inventory.push(fullItem);
       }
-    };
+    });
   }
 }
