@@ -442,7 +442,7 @@ function drawSavePopupBox() {
   fill(255);
   textAlign(CENTER, CENTER);
   textSize(20);
-  text("게임을 저장하고 나가시겠습니까?", windowWidth / 2, windowHeight / 2 - 40);
+  text("놀이를 저장하고 나가겠소?", windowWidth / 2, windowHeight / 2 - 40);
   
   // 버튼 1: 동의
   let isOverAgree = mouseX > windowWidth / 2 - 220 && mouseX < windowWidth / 2 - 20 && mouseY > windowHeight / 2 + 10 && mouseY < windowHeight / 2 + 70;
@@ -465,7 +465,7 @@ function drawSavePopupBox() {
 }
   rect(windowWidth / 2 + 120, windowHeight / 2 + 40, 200, 60, 10);
   fill(255);
-  text("게임 계속하기", windowWidth / 2 + 120, windowHeight / 2 + 40);
+  text("놀이 계속하기", windowWidth / 2 + 120, windowHeight / 2 + 40);
   pop();
 }
 
