@@ -200,25 +200,8 @@ function draw() {
         return;
       }
     }
-    
-    // 인게임 우측 상단 저장 버튼
-    push();
-    rectMode(CORNER);
-    if (mouseX > windowWidth - 120 && mouseX < windowWidth - 20 && mouseY > 20 && mouseY < 65) {
-      fill(100, 100, 100);
-    } else {
-      fill(50, 50, 50, 200);
-    }
-    stroke(255);
-    strokeWeight(1);
-    rect(windowWidth - 120, 20, 100, 45, 8);
-    
-    noStroke();
-    fill(255);
-    textAlign(CENTER, CENTER);
-    textSize(16);
-    text("게임 저장", windowWidth - 70, 42);
-    pop();
+ 
+   
 
     // 저장 팝업창이 활성화되었다면 화면에 그리기
     if (showSavePopup) {
@@ -247,6 +230,25 @@ function draw() {
     drawNavigationArrows();
     drawInventoryBar();
     drawTimeBar(); 
+
+    //저장 버튼
+     push();
+    rectMode(CORNER);
+    if (mouseX > windowWidth - 120 && mouseX < windowWidth - 20 && mouseY > 20 && mouseY < 65) {
+      fill(100, 100, 100);
+    } else {
+      fill(50, 50, 50, 200);
+    }
+    stroke(255);
+    strokeWeight(1);
+    rect(windowWidth - 120, 20, 100, 45, 8);
+    
+    noStroke();
+    fill(255);
+    textAlign(CENTER, CENTER);
+    textSize(16);
+    text("게임 저장", windowWidth - 70, 42);
+    pop();
 
     if (dialogueLines && dialogueLines.length > 0 && currentDialogueIndex >= 0) {
       if (dialogueLines[0] === "보기 좋은 수묵화군. …어라?" && currentDialogueIndex >= 1 && currentDialogueIndex <= 8) {
