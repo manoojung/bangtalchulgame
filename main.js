@@ -44,7 +44,7 @@ function preload(){
   dialSound = loadSound('sound/다이얼 돌리는 소리.mp3');
 
   breakSound = loadSound('sound/금속 깨지는 소리.mp3'); 
-  mouse = loadSound('sound/쥐찍찍소리 (수정).mp3'); 
+  mouse = loadSound('sound/쥐찍찍소리 (수정).mp3');  
   manSound = loadSound('sound/남자 으악 소리.mp3'); 
   paperSound = loadSound('sound/종이부스럭소리.mp3');
   doorSound = loadSound('sound/문 철컥 열리는 소리.mp3');
@@ -158,26 +158,27 @@ function draw() {
 
   if (gameState === "START_MENU") {
     drawStartMenu();
-  if (hasSavedGame) {
-    push();
-    rectMode(CORNER);
-    
-    if (mouseX > windowWidth - 160 && mouseX < windowWidth - 20 && mouseY > 20 && mouseY < 65) {
-      fill(180, 140, 100);
-    } else {
-      fill(139, 105, 75);
+    if (hasSavedGame) {
+      push();
+      rectMode(CORNER);
+      
+      if (mouseX > windowWidth - 160 && mouseX < windowWidth - 20 && mouseY > 20 && mouseY < 65) {
+        fill(180, 140, 100);
+      } else {
+        fill(139, 105, 75);
+      }
+      stroke(255);
+      weight = 2;
+      strokeWeight(2);
+      rect(windowWidth - 160, 20, 140, 45, 8);
+      
+      noStroke();
+      fill(255);
+      textAlign(CENTER, CENTER);
+      textSize(18);
+      text("이어하기", windowWidth - 90, 42);
+      pop();
     }
-    stroke(255);
-    strokeWeight(2);
-    rect(windowWidth - 160, 20, 140, 45, 8);
-    
-    noStroke();
-    fill(255);
-    textAlign(CENTER, CENTER);
-    textSize(18);
-    text("이어하기", windowWidth - 90, 42);
-    pop();
-  }
   } 
   else if (gameState === "HOW_TO_PLAY") {
     drawHowToPlay();
@@ -198,7 +199,9 @@ function draw() {
         shakeDuration = 0;
         return;
       }
-      // 인게임 우측 상단 저장 버튼
+    }
+    
+    // 인게임 우측 상단 저장 버튼
     push();
     rectMode(CORNER);
     if (mouseX > windowWidth - 120 && mouseX < windowWidth - 20 && mouseY > 20 && mouseY < 65) {
@@ -217,10 +220,9 @@ function draw() {
     text("게임 저장", windowWidth - 70, 42);
     pop();
 
-    // [추가] 저장 팝업창이 활성화되었다면 화면에 그리기
+    // 저장 팝업창이 활성화되었다면 화면에 그리기
     if (showSavePopup) {
       drawSavePopupBox();
-    }
     }
 
     let isZoomedRoom = (currentRoom === 0 && currentDialogueIndex >= 2 && currentDialogueIndex <= 4);
@@ -422,70 +424,18 @@ function keyPressed() {
 }
 
 function mousePressed() {
-  // 1. 첫 화면 메뉴에서 이어하기 버튼 클릭 처리
-  if (gameState === "START_MENU" && hasSavedGame) {
-    if (mouseX > windowWidth - 160 && mouseX < windowWidth - 20 && mouseY > 20 && mouseY < 65) {
-      loadGameData(); // 저장된 데이터 불러오는 함수 실행
-      return;
-    }
-  }
-
-  // 2. 인게임 플레이 중 버튼 클릭 처리
-  if (gameState === "GAME_PLAY") {
-    // 저장 팝업창이 켜져있을 때의 클릭 판정 최상단 우선 처리
-    if (showSavePopup) {
-      let btnYMin = windowHeight / 2 + 10;
-      let btnYMax = windowHeight / 2 + 70;
-      
-      // 동의 (저장하고 나가기) 버튼 클릭시
-      if (mouseX > windowWidth / 2 - 220 && mouseX < windowWidth / 2 - 20 && mouseY > btnYMin && mouseY < btnYMax) {
-        saveGameData();     // 데이터 저장 함수 실행
-        showSavePopup = false;
-        gameState = "START_MENU"; // 첫 화면으로 이동
-        hasSavedGame = true;      // 이어하기 버튼 활성화 상태 갱신
-      }
-      // 게임 계속하기 버튼 클릭시
-      else if (mouseX > windowWidth / 2 + 20 && mouseX < windowWidth / 2 + 220 && mouseY > btnYMin && mouseY < btnYMax) {
-        showSavePopup = false;    // 팝업만 닫고 게임 계속 진행
-      }
-      return; // 팝업이 떠있을 때는 아래 다른 오브젝트 클릭 안 되도록 차단
-    }
-
-    // 우측 상단 '게임 저장' 버튼을 눌렀을 때
-    if (mouseX > windowWidth - 120 && mouseX < windowWidth - 20 && mouseY > 20 && mouseY < 65) {
-      showSavePopup = true;
-      return;
-    }
-    
-  if (gameState === "BAD_ENDING" || gameState === "HAPPY_ENDING") {
-    if (!isStamped) {
-      handleEndingNext();
-    } 
-    else {
-      let btnW = 180; let btnH = 55;
-      let btnY = windowHeight / 2 + 110;
-      let btnX1 = windowWidth / 2 - 110;
-      let btnX2 = windowWidth / 2 + 110;
-
-      if (mouseX > btnX1 - btnW/2 && mouseX < btnX1 + btnW/2 && mouseY > btnY - btnH/2 && mouseY < btnY + btnH/2) {
-        resetWholeGame();
-      }
-      if (mouseX > btnX2 - btnW/2 && mouseX < btnX2 + btnW/2 && mouseY > btnY - btnH/2 && mouseY < btnY + btnH/2) {
-        gameState = "CREDITS";
-      }
-    }
-    return;
-  }
-
-  if (isGameOver) {
-    resetWholeGame();
-    return;
-  }
-
+  // 1. START_MENU 상태일 때 처리
   if (gameState === "START_MENU") {
+    // 이어하기 버튼 클릭
+    if (hasSavedGame && mouseX > windowWidth - 160 && mouseX < windowWidth - 20 && mouseY > 20 && mouseY < 65) {
+      loadGameData();
+      return;
+    }
+
     let bHalfW = btnImgW / 2;
     let bHalfH = btnImgH / 2;
 
+    // 방법 보기 버튼 클릭
     if (mouseX > (windowWidth / 2 - 150) - bHalfW && mouseX < (windowWidth / 2 - 150) + bHalfW &&
         mouseY > (windowHeight / 2 + 200) - bHalfH && mouseY < (windowHeight / 2 + 200) + bHalfH) {
       gameState = "HOW_TO_PLAY";
@@ -493,6 +443,7 @@ function mousePressed() {
       return;
     }
 
+    // 게임 시작 버튼 클릭
     if (mouseX > (windowWidth / 2 + 150) - bHalfW && mouseX < (windowWidth / 2 + 150) + bHalfW &&
         mouseY > (windowHeight / 2 + 200) - bHalfH && mouseY < (windowHeight / 2 + 200) + bHalfH) {
       gameState = "STORY_INTRO";
@@ -503,16 +454,18 @@ function mousePressed() {
       transitionAlpha = 255;
       return;
     }
-  } 
+  }  
+  // 2. HOW_TO_PLAY 상태일 때 처리
   else if (gameState === "HOW_TO_PLAY") {
-    if (mouseX > windowWidth - 340 && mouseX < windowWidth - 260 && 
-        mouseY > 40 && mouseY < 80) {
+    if (mouseX > windowWidth - 340 && mouseX < windowWidth - 260 && mouseY > 40 && mouseY < 80) {
       howToStep++;
       if (howToStep >= totalHowToSteps) {
         gameState = "START_MENU"; 
       }
     }
+    return;
   }
+  // 3. STORY_INTRO 상태일 때 처리
   else if (gameState === "STORY_INTRO") {
     if (mouseX > windowWidth - 125 && mouseX < windowWidth - 35 && mouseY > 20 && mouseY < 60) {
       gameState = "GAME_PLAY"; 
@@ -536,14 +489,68 @@ function mousePressed() {
       return;
     }
     handleNextScript();
+    return;
   }
+  // 4. 엔딩 및 게임오버 처리
+  else if (gameState === "BAD_ENDING" || gameState === "HAPPY_ENDING") {
+    if (!isStamped) {
+      handleEndingNext();
+    } 
+    else {
+      let btnW = 180; let btnH = 55;
+      let btnY = windowHeight / 2 + 110;
+      let btnX1 = windowWidth / 2 - 110;
+      let btnX2 = windowWidth / 2 + 110;
+
+      if (mouseX > btnX1 - btnW/2 && mouseX < btnX1 + btnW/2 && mouseY > btnY - btnH/2 && mouseY < btnY + btnH/2) {
+        resetWholeGame();
+      }
+      if (mouseX > btnX2 - btnW/2 && mouseX < btnX2 + btnW/2 && mouseY > btnY - btnH/2 && mouseY < btnY + btnH/2) {
+        gameState = "CREDITS";
+      }
+    }
+    return;
+  }
+  else if (isGameOver) {
+    resetWholeGame();
+    return;
+  }
+  // 5. GAME_PLAY 상태일 때 처리
   else if (gameState === "GAME_PLAY") {
+    // 저장 팝업창 활성화 시 최우선 처리
+    if (showSavePopup) {
+      let btnYMin = windowHeight / 2 + 10;
+      let btnYMax = windowHeight / 2 + 70;
+      
+      // 동의 (저장하고 나가기) 버튼 클릭
+      if (mouseX > windowWidth / 2 - 220 && mouseX < windowWidth / 2 - 20 && mouseY > btnYMin && mouseY < btnYMax) {
+        saveGameData();     
+        showSavePopup = false;
+        gameState = "START_MENU"; 
+        hasSavedGame = true;      
+      }
+      // 게임 계속하기 버튼 클릭
+      else if (mouseX > windowWidth / 2 + 20 && mouseX < windowWidth / 2 + 220 && mouseY > btnYMin && mouseY < btnYMax) {
+        showSavePopup = false;    
+      }
+      return; 
+    }
+
+    // 우측 상단 '게임 저장' 버튼 클릭
+    if (mouseX > windowWidth - 120 && mouseX < windowWidth - 20 && mouseY > 20 && mouseY < 65) {
+      showSavePopup = true;
+      return;
+    }
+    
+    // 인벤토리 바 클릭 처리
     if (mouseY > windowHeight - 90 && mouseY < windowHeight - 10) {
       for (let i = 0; i < inventory.length; i++) {
         let slotX = 200 + 90 * i;
         if (mouseX > slotX - 35 && mouseX < slotX + 35) {
           if (inventory[i].name.includes("쪽지") || inventory[i].name === "비녀" || inventory[i].name === "옷더미" || inventory[i].name === "연서") {
-            if (paperSound) paperSound.play(); activeZoomNote = inventory[i]; return;
+            if (paperSound) paperSound.play(); 
+            activeZoomNote = inventory[i]; 
+            return;
           } else {
             let releasedItem = inventory.splice(i, 1)[0]; 
             releasedItem.room = currentRoom; 
@@ -576,6 +583,7 @@ function mousePressed() {
       return;
     }
 
+    // 방0 자물쇠 입력 패널 처리
     if (currentRoom === 0 && showLockPanel && !showPotOptions && !showDoorOptions) {
       let panelX = windowWidth / 2;
       let panelY = windowHeight / 2 - 40;
@@ -632,10 +640,10 @@ function mousePressed() {
       return;
     }
 
+    // 항아리 선택지 처리
     if (showPotOptions) {
       if (mouseX > windowWidth/2 - 270 && mouseX < windowWidth/2 - 50 && mouseY > windowHeight/2 - 30 && mouseY < windowHeight/2 + 30) {
         showPotOptions = false; if (breakSound) breakSound.play(); if (manSound) manSound.play();
-
         timeLeft = max(0, timeLeft - 15000); 
 
         for (let i = 0; i < items.length; i++) {
@@ -651,6 +659,7 @@ function mousePressed() {
       return; 
     }
 
+    // 사물함 선택지 처리
     if (showDoorOptions) {
       if (mouseX > windowWidth/2 - 270 && mouseX < windowWidth/2 - 50 && mouseY > windowHeight/2 - 30 && mouseY < windowHeight/2 + 30) {
         showDoorOptions = false; if (doorSound) doorSound.play(); 
@@ -666,6 +675,7 @@ function mousePressed() {
       return; 
     }
 
+    // 동상 선택지 처리
     if (showStatueOptions) {
       let btnYMin = windowHeight / 2 - 30; let btnYMax = windowHeight / 2 + 30;
       let hasHairpin = inventory.some(item => item.name === "비녀");
@@ -705,11 +715,13 @@ function mousePressed() {
     if (currentDialogueIndex >= 0) { handleRoomDialogue(); return; }
     if (currentNpcIndex >= 0) { handleNpcDialogue(); return; }
 
+    // 방 이동 화살표 처리
     if (mouseY > windowHeight/2 - 40 && mouseY < windowHeight/2 + 40) {
       if (mouseX > 20 && mouseX < 90) { currentRoom = (currentRoom - 1 + totalRooms) % totalRooms; return; }
       if (mouseX > windowWidth - 90 && mouseX < windowWidth - 20) { currentRoom = (currentRoom + 1) % totalRooms; return; }
     }
 
+    // 반짝이 오브젝트 클릭 처리
     for (let i = 0; i < sparkles.length; i++) {
       let sp = sparkles[i];
       if (sp.room === currentRoom) {
@@ -719,6 +731,7 @@ function mousePressed() {
       }
     }
 
+    // 비단치마 클릭 처리
     let skirtItem = items.find(it => it.name === "비단치마");
     if (skirtItem && skirtItem.room === currentRoom && !skirtItem.isCollected) {
       let boxW = skirtItem.size;
@@ -741,6 +754,7 @@ function mousePressed() {
       }
     }
 
+    // 일반 아이템들 클릭 처리
     for (let i = 0; i < items.length; i++) {
       let item = items[i];
       if (item.room === currentRoom && !item.isCollected && item.name !== "비단치마") {
