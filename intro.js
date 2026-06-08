@@ -1,3 +1,4 @@
+// 틀은 AI 활용함
 let scripts = [
   { imgIdx: 0, name: "돌쇠", text: "' 마님, 마님! '" },
   { imgIdx: 0, name: "돌쇠", text: "' 어째서 늘 빈 수레같은 공허한 눈망울로 하늘만 치켜보십니까? '" },
@@ -42,7 +43,8 @@ function drawStoryIntro() {
   drawCoverImage(targetImg);
 
   if (transitionAlpha < 240) {
-    push();
+    push(); 
+    // 건너뛰기 버튼 
     rectMode(CENTER);
     fill(255, 180); 
     stroke(0, 100); 
@@ -78,7 +80,8 @@ function drawStoryIntro() {
     textAlign(CENTER, CENTER);
     textSize(nameH * 0.5); 
     text(currentScript.name, nameX + nameW / 2, nameY + nameH / 2);
-
+    
+// 타이핑 효과 (AI 활용) 
     if (!isTransitioning && revealedLength < currentScript.text.length) {
       if (millis() - lastTypeTime > typeSpeed) {
         revealedLength++;
@@ -102,7 +105,7 @@ function drawStoryIntro() {
       text("▶ 클릭 또는 Enter", boxX + boxW - paddingX, boxY + boxH - paddingY / 2);
     }
   }
-
+// 장면 전환
   if (isTransitioning) {
     if (nextAction === "FADE_IN") {
       transitionAlpha -= 15; 
@@ -110,7 +113,8 @@ function drawStoryIntro() {
         transitionAlpha = 0;
         isTransitioning = false; 
         nextAction = "";
-      }
+      } 
+      // 페이드 아웃
     } else if (nextAction === "NEXT_SCRIPT" || nextAction === "GO_TO_GAME") {
       transitionAlpha += 15; 
       if (transitionAlpha >= 255) {
@@ -214,7 +218,7 @@ function drawButton(x, y, w, h, label) {
 function handleNextScript() {
   if (isTransitioning) return;
   let currentScript = scripts[currentScriptIdx];
-
+// 타이핑 강제 완료
   if (revealedLength < currentScript.text.length) {
     revealedLength = currentScript.text.length;
     return;
