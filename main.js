@@ -80,9 +80,13 @@ function setup() {
   initItems(); 
   initSparkles(); 
   updatePositions(); 
-  if (localStorage.getItem("dolsoe_save_data")) {
-    hasSavedGame = true; //데이터확인
-  }
+  if (
+  sessionStorage.getItem(
+    "dolsoe_save_data"
+  )
+) {
+  hasSavedGame = true;
+}
 }
 
 function updatePositions() {
