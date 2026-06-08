@@ -80,6 +80,9 @@ function setup() {
   initItems(); 
   initSparkles(); 
   updatePositions(); 
+  if (localStorage.getItem("dolsoe_save_data")) {
+    hasSavedGame = true; //데이터확인
+  }
 }
 
 function updatePositions() {
@@ -155,6 +158,26 @@ function draw() {
 
   if (gameState === "START_MENU") {
     drawStartMenu();
+  if (hasSavedGame) {
+    push();
+    rectMode(CORNER);
+    
+    if (mouseX > windowWidth - 160 && mouseX < windowWidth - 20 && mouseY > 20 && mouseY < 65) {
+      fill(180, 140, 100);
+    } else {
+      fill(139, 105, 75);
+    }
+    stroke(255);
+    strokeWeight(2);
+    rect(windowWidth - 160, 20, 140, 45, 8);
+    
+    noStroke();
+    fill(255);
+    textAlign(CENTER, CENTER);
+    textSize(18);
+    text("이어하기", windowWidth - 90, 42);
+    pop();
+  }
   } 
   else if (gameState === "HOW_TO_PLAY") {
     drawHowToPlay();
@@ -175,6 +198,29 @@ function draw() {
         shakeDuration = 0;
         return;
       }
+      // 인게임 우측 상단 저장 버튼
+    push();
+    rectMode(CORNER);
+    if (mouseX > windowWidth - 120 && mouseX < windowWidth - 20 && mouseY > 20 && mouseY < 65) {
+      fill(100, 100, 100);
+    } else {
+      fill(50, 50, 50, 200);
+    }
+    stroke(255);
+    strokeWeight(1);
+    rect(windowWidth - 120, 20, 100, 45, 8);
+    
+    noStroke();
+    fill(255);
+    textAlign(CENTER, CENTER);
+    textSize(16);
+    text("게임 저장", windowWidth - 70, 42);
+    pop();
+
+    // [추가] 저장 팝업창이 활성화되었다면 화면에 그리기
+    if (showSavePopup) {
+      drawSavePopupBox();
+    }
     }
 
     let isZoomedRoom = (currentRoom === 0 && currentDialogueIndex >= 2 && currentDialogueIndex <= 4);
@@ -376,6 +422,41 @@ function keyPressed() {
 }
 
 function mousePressed() {
+  // 1. 첫 화면 메뉴에서 이어하기 버튼 클릭 처리
+  if (gameState === "START_MENU" && hasSavedGame) {
+    if (mouseX > windowWidth - 160 && mouseX < windowWidth - 20 && mouseY > 20 && mouseY < 65) {
+      loadGameData(); // 저장된 데이터 불러오는 함수 실행
+      return;
+    }
+  }
+
+  // 2. 인게임 플레이 중 버튼 클릭 처리
+  if (gameState === "GAME_PLAY") {
+    // 저장 팝업창이 켜져있을 때의 클릭 판정 최상단 우선 처리
+    if (showSavePopup) {
+      let btnYMin = windowHeight / 2 + 10;
+      let btnYMax = windowHeight / 2 + 70;
+      
+      // 동의 (저장하고 나가기) 버튼 클릭시
+      if (mouseX > windowWidth / 2 - 220 && mouseX < windowWidth / 2 - 20 && mouseY > btnYMin && mouseY < btnYMax) {
+        saveGameData();     // 데이터 저장 함수 실행
+        showSavePopup = false;
+        gameState = "START_MENU"; // 첫 화면으로 이동
+        hasSavedGame = true;      // 이어하기 버튼 활성화 상태 갱신
+      }
+      // 게임 계속하기 버튼 클릭시
+      else if (mouseX > windowWidth / 2 + 20 && mouseX < windowWidth / 2 + 220 && mouseY > btnYMin && mouseY < btnYMax) {
+        showSavePopup = false;    // 팝업만 닫고 게임 계속 진행
+      }
+      return; // 팝업이 떠있을 때는 아래 다른 오브젝트 클릭 안 되도록 차단
+    }
+
+    // 우측 상단 '게임 저장' 버튼을 눌렀을 때
+    if (mouseX > windowWidth - 120 && mouseX < windowWidth - 20 && mouseY > 20 && mouseY < 65) {
+      showSavePopup = true;
+      return;
+    }
+    
   if (gameState === "BAD_ENDING" || gameState === "HAPPY_ENDING") {
     if (!isStamped) {
       handleEndingNext();
