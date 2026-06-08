@@ -4,6 +4,7 @@ let fadeAlpha = 0;
 let showLockPanel = false;
 let showFailBanner = false;
 
+// 자물쇠 UI (AI 활용) 
 function drawDialLock() {
   push();
   rectMode(CENTER);
@@ -32,7 +33,7 @@ function drawDialLock() {
     displayStr += " _";
   }
   text(displayStr, panelX, panelY - 112);
-
+// 버튼 키패드
   let startX = panelX - 80;
   let startY = panelY - 30;
   let btnSpacingX = 80;
@@ -65,6 +66,7 @@ function drawDialLock() {
     rect(btnX, btnY, btnSize, btnSize, 8);
 
     noStroke();
+    
     if (buttons[i] === "C") fill(240, 100, 100);
     else if (buttons[i] === "E") fill(100, 240, 100);
     else fill(245, 230, 200);
@@ -84,7 +86,7 @@ function drawFailBanner() {
 
   fill(0, 100);
   rect(windowWidth/2, windowHeight/2, windowWidth, windowHeight);
-
+// 메세지 박스
   noStroke();
   fill(0, 220);
   rect(windowWidth / 2, windowHeight / 2, 480, 110, 12);
