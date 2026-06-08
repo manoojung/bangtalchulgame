@@ -426,38 +426,58 @@ function drawStatueOptionsBox() {
 }
 
 //게임 저장 확인 팝업창 그리기
+// ==========================================
+// [최종 수정] 기존 main.js의 이름과 정확히 일치시킨 팝업 그리기 함수
+// ==========================================
 function drawSavePopupBox() {
   push();
   rectMode(CENTER);
-  fill(0, 150);
-  rect(windowWidth / 2, windowHeight / 2, windowWidth, windowHeight);
+  textAlign(CENTER, CENTER);
 
-  // 팝업 메인 박스
-  fill(30, 25, 20, 240);
-  stroke(139, 105, 75);
+  // 팝업창 배경 (어두운 투명창에 갈색 테두리)
+  fill(0, 220);
+  stroke(140, 110, 80);
   strokeWeight(3);
-  rect(windowWidth / 2, windowHeight / 2, 500, 200, 15);
-  
+  rect(windowWidth / 2, windowHeight / 2, 360, 180, 15);
+
+  // 안내 텍스트
   noStroke();
   fill(255);
-  textAlign(CENTER, CENTER);
-  textSize(20);
-  text("게임을 저장하고 나가시겠습니까?", windowWidth / 2, windowHeight / 2 - 40);
-  
-  // 버튼 1: 동의
-  let isOverAgree = mouseX > windowWidth / 2 - 220 && mouseX < windowWidth / 2 - 20 && mouseY > windowHeight / 2 + 10 && mouseY < windowHeight / 2 + 70;
-  fill(isOverAgree ? (180, 70, 70) : (130, 40, 40));
-  rect(windowWidth / 2 - 120, windowHeight / 2 + 40, 200, 60, 10);
-  fill(255);
   textSize(18);
-  text("동의 (저장 후 종료)", windowWidth / 2 - 120, windowHeight / 2 + 40);
+  text("게임 진행 상황을 저장하시겠습니까?", windowWidth / 2, windowHeight / 2 - 30);
   
-  // 버튼 2: 게임 계속하기
-  let isOverContinue = mouseX > windowWidth / 2 + 20 && mouseX < windowWidth / 2 + 220 && mouseY > windowHeight / 2 + 10 && mouseY < windowHeight / 2 + 70;
-  fill(isOverContinue ? (90, 140, 90) : (50, 100, 50));
-  rect(windowWidth / 2 + 120, windowHeight / 2 + 40, 200, 60, 10);
+  textSize(13);
+  fill(180);
+  text("(저장 시 이전 기록은 덮어씌워집니다)", windowWidth / 2, windowHeight / 2 - 5);
+
+  // 버튼 배치 좌표
+  let btnY = windowHeight / 2 + 40;
+  let btnW = 90;
+  let btnH = 35;
+
+  // [예] 버튼 (마우스 올리면 색상 변경)
+  let yesX = windowWidth / 2 - 60;
+  if (mouseX > yesX - btnW/2 && mouseX < yesX + btnW/2 && mouseY > btnY - btnH/2 && mouseY < btnY + btnH/2) {
+    fill(100, 180, 100);
+  } else {
+    fill(60, 120, 60);
+  }
+  rect(yesX, btnY, btnW, btnH, 5);
   fill(255);
-  text("게임 계속하기", windowWidth / 2 + 120, windowHeight / 2 + 40);
+  textSize(15);
+  text("예 (Y)", yesX, btnY);
+
+  // [아니오] 버튼
+  let noX = windowWidth / 2 + 60;
+  if (mouseX > noX - btnW/2 && mouseX < noX + btnW/2 && mouseY > btnY - btnH/2 && mouseY < btnY + btnH/2) {
+    fill(180, 100, 100);
+  } else {
+    fill(120, 60, 60);
+  }
+  rect(noX, btnY, btnW, btnH, 5);
+  fill(255);
+  text("아니오 (N)", noX, btnY);
+
   pop();
 }
 
@@ -497,14 +517,12 @@ function loadGameData() {
   // 2. 맵 아이템 상태들 복구
   if (saveObj.itemsState) {
     saveObj.itemsState.forEach(savedIt => {
-      // 기존의 '사물함'을 현재 프로젝트의 실제 아이템 명칭인 '동상' 및 '쪽지 꺼낸 동상'으로 일치시킵니다.
+      // 존재하지 않는 '사물함'을 실제 데이터인 '동상'으로 변경하여 에러를 방지합니다.
       let realItem = items.find(it => it.name === savedIt.name || (savedIt.name === "쪽지 꺼낸 동상" && it.name === "동상"));
-      
       if (realItem) {
         realItem.room = savedIt.room;
         realItem.isCollected = savedIt.isCollected;
         
-        // 동상에서 이미 쪽지를 꺼낸 저장 상태였다면, 이름과 다이얼로그 대사를 기존 기획에 맞게 원상복구 연동
         if (savedIt.name === "쪽지 꺼낸 동상" && realItem.name === "동상") {
           realItem.name = "쪽지 꺼낸 동상";
           realItem.dialogue = ["동상의 입안은 이제 텅 비어 있다."];
