@@ -429,6 +429,8 @@ function mousePressed() {
     // 이어하기 버튼 클릭
     if (hasSavedGame && mouseX > windowWidth - 160 && mouseX < windowWidth - 20 && mouseY > 20 && mouseY < 65) {
       loadGameData();
+      initItems();
+      initSparkles();
       return;
     }
 
