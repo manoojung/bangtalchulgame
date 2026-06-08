@@ -244,7 +244,7 @@ function draw() {
     fill(255);
     textAlign(CENTER, CENTER);
     textSize(16);
-    text("게임 저장", windowWidth - 70, 42);
+    text("놀이 저장", windowWidth - 70, 42);
     pop();
 
     if (dialogueLines && dialogueLines.length > 0 && currentDialogueIndex >= 0) {
