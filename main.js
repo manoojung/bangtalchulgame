@@ -5,6 +5,8 @@ let btnImgW = 180;
 let btnImgH = 70;
 let currentRoom = 0;
 const totalRooms = 4;
+let showSavePopup = false;
+let hasSavedGame = false; // 중간 저장
 
 function preload(){
   bgImg = loadImage('images/게임 오프닝 화면.png'); 
