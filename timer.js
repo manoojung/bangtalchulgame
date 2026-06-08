@@ -16,7 +16,7 @@ function drawTimeBar() {
   fill(40, 40, 40, 220);
   rect(barX, barY, barW, barH, 8);
 
-  let progress = constrain(timeLeft / maxTime, 0, 1);
+  let progress = timerStarted ? constrain(timeLeft / maxTime, 0, 1) : 1;
 
   colorMode(RGB);
   let barColor = color(255 * (1 - progress), 255 * progress, 50);
