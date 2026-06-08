@@ -253,7 +253,7 @@ function drawCredits() {
   text("제가 돌쇠만큼 힘들게 일했으니 돌쇠가 마님과 꼭 행복해졌으면 좋겠습니다.... ", windowWidth / 2, startY + lineSpacing * 5 + 25);
 
   textSize(windowWidth * 0.04);
-  text("감사합니다!", windowWidth / 2, startY + lineSpacing * 6);
+  text("감사합니다!", windowWidth / 2, startY + lineSpacing * 7.5);
 }
 
 function handleEndingNext() {
