@@ -4,6 +4,7 @@ let isGameOver = false;
 let lastTextChecked = "";
 let timerStarted = false;
 
+// 타이머 UI 
 function drawTimeBar() {
   push();
   let barW = windowWidth * 0.4;
@@ -15,9 +16,9 @@ function drawTimeBar() {
   strokeWeight(2);
   fill(40, 40, 40, 220);
   rect(barX, barY, barW, barH, 8);
-
+// 진행률 계산 (AI 활용) 
   let progress = timerStarted ? constrain(timeLeft / maxTime, 0, 1) : 1;
-
+// 색상 변홛
   colorMode(RGB);
   let barColor = color(255 * (1 - progress), 255 * progress, 50);
 
