@@ -226,11 +226,31 @@ function drawCredits() {
   let startY = windowHeight * 0.35;
   let lineSpacing = windowHeight * 0.05;
 
+  // 기존 타이틀과 팀명 (크기 예시: 32)
+  textSize(32); 
   text("제작자", windowWidth / 2, startY);
   text("team 최강천민", windowWidth / 2, startY + lineSpacing);
+
+  // --- 강수민 파트 ---
+  textSize(32); // 이름 폰트 크기
   text("강수민", windowWidth / 2, startY + lineSpacing * 2);
-  text("천우정", windowWidth / 2, startY + lineSpacing * 3);
-  text("최정은", windowWidth / 2, startY + lineSpacing * 4);
+  
+  textSize(20); // [소감] 폰트 크기 줄이기
+  text("다들힘개를 거꾸로 하면?", windowWidth / 2, startY + lineSpacing * 2 + 25); 
+
+
+  textSize(32); 
+  text("천우정", windowWidth / 2, startY + lineSpacing * 3.5); 
+  
+  textSize(20); 
+  text("플레이어가 스토리에 몰입하면서 게임을 즐길 수 있도록 고민하며 결과물을 완성한 과정이 매우 뿌듯했다.", windowWidth / 2, startY + lineSpacing * 3.5 + 25);
+
+
+  textSize(32); 
+  text("최정은", windowWidth / 2, startY + lineSpacing * 5);
+  
+  textSize(20);
+  text("제가 돌쇠만큼 힘들게 일했으니 돌쇠가 마님과 꼭 행복해졌으면 좋겠습니다.... ", windowWidth / 2, startY + lineSpacing * 5 + 25);
 
   textSize(windowWidth * 0.04);
   text("감사합니다!", windowWidth / 2, startY + lineSpacing * 6);
