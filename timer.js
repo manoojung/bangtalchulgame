@@ -36,7 +36,7 @@ function drawTimeBar() {
   let timeString = nf(minutes, 2) + ":" + nf(seconds, 2);
 
   if (!timerStarted) {
-    text("탈출 제한시간  03:00", windowWidth / 2, barY + barH / 2);
+    text("탈출 제한시간  05:00", windowWidth / 2, barY + barH / 2);
   } else {
     text("탈출 제한시간  " + timeString, windowWidth / 2, barY + barH / 2);
   }
