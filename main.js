@@ -188,7 +188,7 @@ function draw() {
     drawStoryIntro();
   } 
   else if (gameState === "GAME_PLAY") {
-    if (timerStarted) {
+    if (timerStarted && !showSavePopup) {
       timeLeft -= deltaTime;
       if (timeLeft <= 0) {
         timeLeft = 0;
@@ -202,9 +202,7 @@ function draw() {
       }
     }
  
-   if (showSavePopup) {
-  drawSavePopupBox();
-}
+
 
     
     let isZoomedRoom = (currentRoom === 0 && currentDialogueIndex >= 2 && currentDialogueIndex <= 4);
@@ -304,6 +302,10 @@ function draw() {
     if (activeSparkle !== null) {
       drawSparklePopup();
     }
+    
+    if (showSavePopup) {
+  drawSavePopupBox();
+}
   }
 }
 
@@ -474,7 +476,7 @@ function mousePressed() {
     if (mouseX > windowWidth - 125 && mouseX < windowWidth - 35 && mouseY > 20 && mouseY < 60) {
       gameState = "GAME_PLAY"; 
       currentRoom = 0; 
-      timeLeft = 180000; 
+      timeLeft = 300000; 
       timerStarted = false; 
       isGameOver = false;
 
