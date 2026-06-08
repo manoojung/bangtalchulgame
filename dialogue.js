@@ -192,7 +192,7 @@ function drawNpcDialogueBox() {
 
   if (revealedLength === currentScript.text.length) {
     textAlign(RIGHT, BOTTOM); 
-    textSize(boxH * 0.1); 
+    textSize(boxH * 0.1; 
     fill(255, 150 + sin(frameCount * 0.1) * 105);
     text("▶ 클릭 또는 Enter", boxX + boxW - paddingX, boxY + boxH - paddingY / 2);
   }
@@ -206,15 +206,15 @@ function handleRoomDialogue() {
     revealedLength = currentText.length;
     return;
   }
- if (currentDialogueIndex === 0) {
-  if (dialogueLines[0] === "< 안에 무언가가 들어있을 것만 같은 느낌이 든다. >") { showPotOptions = true; return; }
-  if (dialogueLines[0] === "..낡은 문이다.") { showDoorOptions = true; return; }
-}
-if (dialogueLines[currentDialogueIndex] === "< 동상의 입에 쪽지가 있다. 꺼내야 할 것 같다. >") {
-  showStatueOptions = true;
-  return;
-}
-  
+  if (currentDialogueIndex === 0) {
+    if (dialogueLines[0] === "< 안에 무언가가 들어있을 것만 같은 느낌이 든다. >") { showPotOptions = true; return; }
+    if (dialogueLines[0] === "..낡은 문이다.") { showDoorOptions = true; return; }
+  }
+  if (dialogueLines[currentDialogueIndex] === "< 동상의 입에 쪽지가 있다. 꺼내야 할 것 같다. >") {
+    showStatueOptions = true;
+    return;
+  }
+    
   if (dialogueLines[0] === "이 천은 설마…") {
     if (currentDialogueIndex === 6 && metalClang) {
       metalClang.play(); 
@@ -425,10 +425,6 @@ function drawStatueOptionsBox() {
   pop();
 }
 
-//게임 저장 확인 팝업창 그리기
-// ==========================================
-// [최종 수정] 기존 main.js의 이름과 정확히 일치시킨 팝업 그리기 함수
-// ==========================================
 function drawSavePopupBox() {
   push();
   rectMode(CENTER);
@@ -481,7 +477,6 @@ function drawSavePopupBox() {
   pop();
 }
 
-// [추가] localStorage를 이용해 현재 상태 백업 기술
 function saveGameData() {
   // 원본 아이템 배열 중 변경된 상태값(수집 여부, 변경된 이름, 바뀐 룸 번호 등)만 압축 추출
   let itemsState = items.map(it => {
@@ -494,6 +489,7 @@ function saveGameData() {
   let saveObj = {
     currentRoom: currentRoom,
     timeLeft: timeLeft,
+    timerStarted: timerStarted, // 타이머 구동 유무 상태 추가 백업
     itemsState: itemsState,
     inventoryNames: inventoryNames
   };
@@ -502,8 +498,6 @@ function saveGameData() {
   localStorage.setItem("dolsoe_save_data", JSON.stringify(saveObj));
 }
 
-// [추가] 로컬스토리지에서 데이터를 읽어와 원상복구
-// [수정완료] 로컬스토리지에서 데이터를 읽어와 현재 프로젝트 명칭(동상)에 맞게 원상복구하는 함수
 function loadGameData() {
   let rawData = localStorage.getItem("dolsoe_save_data");
   if (!rawData) return;
@@ -513,17 +507,21 @@ function loadGameData() {
   // 1. 방 정보 및 타이머 복구
   currentRoom = saveObj.currentRoom;
   timeLeft = saveObj.timeLeft;
+  if (saveObj.timerStarted !== undefined) {
+    timerStarted = saveObj.timerStarted;
+  }
 
   // 2. 맵 아이템 상태들 복구
   if (saveObj.itemsState) {
     saveObj.itemsState.forEach(savedIt => {
-      // 존재하지 않는 '사물함'을 실제 데이터인 '동상'으로 변경하여 에러를 방지합니다.
+      // '쪽지 꺼낸 동상'으로 저장되었든 원래 이름으로 저장되었든 '동상' 오브젝트를 원본 배열에서 매칭
       let realItem = items.find(it => it.name === savedIt.name || (savedIt.name === "쪽지 꺼낸 동상" && it.name === "동상"));
       if (realItem) {
         realItem.room = savedIt.room;
         realItem.isCollected = savedIt.isCollected;
         
-        if (savedIt.name === "쪽지 꺼낸 동상" && realItem.name === "동상") {
+        // 동상에서 이미 쪽지를 뺀 상태로 저장되었다면 이름과 텍스트 스크립트 상태를 그대로 전이시킴
+        if (savedIt.name === "쪽지 꺼낸 동상") {
           realItem.name = "쪽지 꺼낸 동상";
           realItem.dialogue = ["동상의 입안은 이제 텅 비어 있다."];
         }
@@ -535,10 +533,19 @@ function loadGameData() {
   inventory = [];
   if (saveObj.inventoryNames) {
     saveObj.inventoryNames.forEach(name => {
+      // '쪽지 꺼낸 동상' 상호작용 후 획득한 방2 동상 쪽지나 기타 아이템들을 순서대로 인벤토리에 복원
       let fullItem = items.find(it => it.name === name);
       if (fullItem) {
         inventory.push(fullItem);
       }
     });
+  }
+  
+  // UI 상태 초기화 후 인게임 화면으로 완전 전환시킴
+  showSavePopup = false;
+  currentDialogueIndex = -1;
+  currentNpcIndex = -1;
+  if (typeof updatePositions === "function") {
+    updatePositions();
   }
 }
