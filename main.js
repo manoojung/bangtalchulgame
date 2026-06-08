@@ -307,6 +307,7 @@ function resetWholeGame() {
 
   initItems();
   initSparkles();
+  updatePositions();
   inventory = [];
   currentRoom = 0;
   currentDialogueIndex = -1;
