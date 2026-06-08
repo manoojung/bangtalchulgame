@@ -1,16 +1,19 @@
-let dialogueLines = [];
-let currentDialogueIndex = -1;
-let npcDialogueLines = [];
-let currentNpcIndex = -1;
-let activeZoomNote = null;
+let dialogueLines = []; // 현재 진행 중인 대사 배열
+let currentDialogueIndex = -1; // 현재 대사 인덱스
+let npcDialogueLines = []; // npc 대사 배열
+let currentNpcIndex = -1; // npc 대사 인덱스
+let activeZoomNote = null; // 확대해서 보여줄 아이템
+// 선택지 UI 상태
 let showPotOptions = false;
 let showDoorOptions = false;
 let showStatueOptions = false;
 
+// 일반 대사 UI 
 function drawDialogueBox() {
   push();
   let currentText = dialogueLines[currentDialogueIndex];
 
+  // stress 대사 처리 
   if (currentText.includes("stress") || currentText.includes("스트레스")) {
     if (currentText !== lastTextChecked) {
       lastTextChecked = currentText;
@@ -24,7 +27,8 @@ function drawDialogueBox() {
     let boxW = 460;
     let boxH = 130;
     rect(windowWidth / 2, windowHeight / 2, boxW, boxH, 12);
-
+    
+// 타이핑 효과 (AI 활용) 
     if (revealedLength < currentText.length) {
       if (millis() - lastTypeTime > typeSpeed) {
         revealedLength++;
@@ -38,7 +42,8 @@ function drawDialogueBox() {
     textSize(22);
     textAlign(CENTER, CENTER);
     text(displayText, windowWidth / 2, windowHeight / 2 - 10);
-
+    
+// 다음 진행 안내
     if (revealedLength === currentText.length && !showPotOptions && !showDoorOptions && !showStatueOptions) {
       textAlign(CENTER, CENTER);
       textSize(13);
@@ -61,6 +66,7 @@ function drawDialogueBox() {
   rectMode(CORNER);
   image(dia, boxX, boxY, boxW, boxH);
 
+  // 타이핑 효과 (AI 활용)
   if (revealedLength < currentText.length) {
     if (millis() - lastTypeTime > typeSpeed) {
       revealedLength++;
@@ -75,6 +81,7 @@ function drawDialogueBox() {
   textAlign(LEFT, TOP);
   text(displayText, boxX + (boxW * 0.08), boxY + (boxH * 0.55), boxW - (boxW * 0.16), boxH - (boxH * 0.6)); 
 
+  // 다음 진행 표시
   if (revealedLength === currentText.length && !showPotOptions && !showDoorOptions && !showStatueOptions) {
     textAlign(RIGHT, BOTTOM);
     textSize(boxW * 0.02); 
@@ -90,6 +97,7 @@ function drawZoomedNote() {
   rect(0, 0, windowWidth, windowHeight);
   imageMode(CENTER);
 
+  // 아이템 종류별 확대 UI 
   if (activeZoomNote.name === "비녀") {
     let hairpinH = windowHeight * 0.35; 
     let hairpinW = hairpinH * (activeZoomNote.img.width / activeZoomNote.img.height);
@@ -143,15 +151,18 @@ function drawZoomedNote() {
   pop();
 }
 
+// npc 대사 UI
 function drawNpcDialogueBox() {
   push();
   let currentScript = npcDialogueLines[currentNpcIndex];
 
+  // npc 이미지 출력
   if (currentScript.name === "서생원" && char7) {
     imageMode(CENTER);
     image(char7, windowWidth - 520, windowHeight * 0.5, 180, 180 * (char7.height / char7.width));
   }
 
+  // 대사 박스
   let boxW = windowWidth * 0.8; 
   let boxH = windowHeight * 0.22;
   let boxX = (windowWidth - boxW) / 2; 
@@ -162,6 +173,7 @@ function drawNpcDialogueBox() {
   fill(0, 180); 
   rect(boxX, boxY, boxW, boxH, 10);
 
+  // 이름 박스
   let nameW = boxW * 0.2; 
   let nameH = boxH * 0.25; 
   let nameX = boxX + 10; 
@@ -175,6 +187,7 @@ function drawNpcDialogueBox() {
   textSize(nameH * 0.5); 
   text(currentScript.name, nameX + nameW / 2, nameY + nameH / 2);
 
+  // 타이핑 효과 (AI 활용) 
   if (revealedLength < currentScript.text.length) {
     if (millis() - lastTypeTime > typeSpeed) {
       revealedLength++; 
@@ -202,6 +215,7 @@ function drawNpcDialogueBox() {
 function handleRoomDialogue() {
   if (!dialogueLines || dialogueLines.length === 0 || currentDialogueIndex === -1) return;
   let currentText = dialogueLines[currentDialogueIndex];
+  // 타이핑 강제 완료
   if (revealedLength < currentText.length) {
     revealedLength = currentText.length;
     return;
@@ -352,7 +366,8 @@ function handleNpcDialogue() {
   let finishedSpeaker = npcDialogueLines[currentNpcIndex].name;
   currentNpcIndex++;
   revealedLength = 0;
-
+  
+// npc 대사 종료 시 이벤트 실행
   if (currentNpcIndex >= npcDialogueLines.length) {
     currentNpcIndex = -1;
     if (finishedSpeaker === "서생원") {
@@ -425,7 +440,7 @@ function drawStatueOptionsBox() {
   pop();
 }
 
-
+// 저장
 function drawSavePopupBox() {
   push();
   rectMode(CENTER);
@@ -469,7 +484,6 @@ function drawSavePopupBox() {
   pop();
 }
 
-// 현재 상태 백업 
 function saveGameData() {
 
   let itemsState = items.map(it => ({
