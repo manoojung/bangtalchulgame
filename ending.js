@@ -144,7 +144,7 @@ function drawBadEnding() {
     }
   } 
   else {
-    drawStatusWindow("자네는 결국 마님을 설득해\n함께 탈출하는 걸 실패했네!", stampImg);
+    drawStatusWindow("자네는 바람 증거를 모으지 못했거나\n시간 안에 탈출을 실패했네!", stampImg);
   }
   pop();
 }
