@@ -425,14 +425,14 @@ function drawStatueOptionsBox() {
   pop();
 }
 
-//게임 저장 확인 팝업창 그리기
+
 function drawSavePopupBox() {
   push();
   rectMode(CENTER);
   fill(0, 150);
   rect(windowWidth / 2, windowHeight / 2, windowWidth, windowHeight);
 
-  // 팝업 메인 박스
+  
   fill(30, 25, 20, 240);
   stroke(139, 105, 75);
   strokeWeight(3);
@@ -469,7 +469,7 @@ function drawSavePopupBox() {
   pop();
 }
 
-// [추가] localStorage를 이용해 현재 상태 백업 기술
+// 현재 상태 백업 
 function saveGameData() {
 
   let itemsState = items.map(it => ({
@@ -514,7 +514,7 @@ function saveGameData() {
   );
 }
 
-// [추가] 로컬스토리지에서 데이터를 읽어와 원상복구
+
 function loadGameData() {
 
   let rawData =
