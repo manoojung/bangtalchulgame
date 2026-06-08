@@ -522,17 +522,19 @@ function saveGameData() {
     inventoryNames: inventoryNames
   };
 
-  localStorage.setItem(
-    "dolsoe_save_data",
-    JSON.stringify(saveObj)
-  );
+  sessionStorage.setItem(
+  "dolsoe_save_data",
+  JSON.stringify(saveObj)
+);
 }
 
 
 function loadGameData() {
 
-  let rawData =
-    localStorage.getItem("dolsoe_save_data");
+ let rawData =
+  sessionStorage.getItem(
+    "dolsoe_save_data"
+  );
 
   if (!rawData) return;
 
