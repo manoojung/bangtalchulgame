@@ -1,7 +1,7 @@
 let items = [];
 let inventory = [];
 
-// 틀은 AI 를 활용함
+// 방마다 아이템 배치: AI 를 활용함
 function initItems() {
   items = [
     { name: "자물쇠 문", room: 0, img: imgLockDoor, xRatio: 0.5, yRatio: 0.49, sizeRatio: 0.75, x: 0, y: 0, size: 0, isCollected: false, isGizmo: false },
