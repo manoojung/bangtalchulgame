@@ -1,6 +1,6 @@
 let currentEndIdx = 0; 
 
-let endingLines =  // 배드엔딩 대사
+let endingLines = [ // 배드엔딩 대사
  '돌쇠는 결국 탈출에 실패했다.',
   '마님을 마음에 품고 탈출까지 하려했던 돌쇠',
   '나으리는 결국 돌쇠를 벌했다.',
