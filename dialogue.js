@@ -446,7 +446,11 @@ function drawSavePopupBox() {
   
   // 버튼 1: 동의
   let isOverAgree = mouseX > windowWidth / 2 - 220 && mouseX < windowWidth / 2 - 20 && mouseY > windowHeight / 2 + 10 && mouseY < windowHeight / 2 + 70;
-  fill(isOverAgree ? (180, 70, 70) : (130, 40, 40));
+  if (isOverAgree) {
+  fill(180,70,70);
+} else {
+  fill(130,40,40);
+}
   rect(windowWidth / 2 - 120, windowHeight / 2 + 40, 200, 60, 10);
   fill(255);
   textSize(18);
@@ -454,7 +458,11 @@ function drawSavePopupBox() {
   
   // 버튼 2: 게임 계속하기
   let isOverContinue = mouseX > windowWidth / 2 + 20 && mouseX < windowWidth / 2 + 220 && mouseY > windowHeight / 2 + 10 && mouseY < windowHeight / 2 + 70;
-  fill(isOverContinue ? (90, 140, 90) : (50, 100, 50));
+  if (isOverContinue) {
+  fill(90,140,90);
+} else {
+  fill(50,100,50);
+}
   rect(windowWidth / 2 + 120, windowHeight / 2 + 40, 200, 60, 10);
   fill(255);
   text("게임 계속하기", windowWidth / 2 + 120, windowHeight / 2 + 40);
@@ -463,66 +471,146 @@ function drawSavePopupBox() {
 
 // [추가] localStorage를 이용해 현재 상태 백업 기술
 function saveGameData() {
-  // 원본 아이템 배열 중 변경된 상태값(수집 여부, 변경된 이름, 바뀐 룸 번호 등)만 압축 추출
-  let itemsState = items.map(it => {
-    return { name: it.name, room: it.room, isCollected: it.isCollected };
-  });
 
-  // 인벤토리에 들어있는 아이템들의 이름만 추출
+  let itemsState = items.map(it => ({
+    name: it.name,
+    room: it.room,
+    isCollected: it.isCollected
+  }));
+
   let inventoryNames = inventory.map(it => it.name);
 
   let saveObj = {
+
+    // 게임 상태
+    gameState: gameState,
     currentRoom: currentRoom,
     timeLeft: timeLeft,
+    timerStarted: timerStarted,
+
+    // 대화 상태
+    currentDialogueIndex: currentDialogueIndex,
+    dialogueLines: dialogueLines,
+
+    currentNpcIndex: currentNpcIndex,
+    npcDialogueLines: npcDialogueLines,
+
+    // UI 상태
+    showLockPanel: showLockPanel,
+    enteredCode: enteredCode,
+
+    showPotOptions: showPotOptions,
+    showDoorOptions: showDoorOptions,
+    showStatueOptions: showStatueOptions,
+
+    // 아이템
     itemsState: itemsState,
     inventoryNames: inventoryNames
   };
 
-  // 브라우저 로컬 저장소에 문자열 형태로 보관합니다.
-  localStorage.setItem("dolsoe_save_data", JSON.stringify(saveObj));
+  localStorage.setItem(
+    "dolsoe_save_data",
+    JSON.stringify(saveObj)
+  );
 }
 
 // [추가] 로컬스토리지에서 데이터를 읽어와 원상복구
 function loadGameData() {
-  let rawData = localStorage.getItem("dolsoe_save_data");
+
+  let rawData =
+    localStorage.getItem("dolsoe_save_data");
+
   if (!rawData) return;
 
   let saveObj = JSON.parse(rawData);
 
-  // 1. 방 정보 및 타이머 복구
   currentRoom = saveObj.currentRoom;
   timeLeft = saveObj.timeLeft;
+  timerStarted = saveObj.timerStarted;
 
-  // 2. 맵 아이템 상태들 복구
+  currentDialogueIndex =
+    saveObj.currentDialogueIndex;
+
+  dialogueLines =
+    saveObj.dialogueLines || [];
+
+  currentNpcIndex =
+    saveObj.currentNpcIndex;
+
+  npcDialogueLines =
+    saveObj.npcDialogueLines || [];
+
+  showLockPanel =
+    saveObj.showLockPanel;
+
+  enteredCode =
+    saveObj.enteredCode || "";
+
+  showPotOptions =
+    saveObj.showPotOptions;
+
+  showDoorOptions =
+    saveObj.showDoorOptions;
+
+  showStatueOptions =
+    saveObj.showStatueOptions;
+
+  // 아이템 복구
   if (saveObj.itemsState) {
+
     saveObj.itemsState.forEach(savedIt => {
-      let realItem = items.find(it => it.name === savedIt.name || (savedIt.name === "열린 사물함" && it.name === "사물함"));
-      if (realItem) {
-        realItem.room = savedIt.room;
-        realItem.isCollected = savedIt.isCollected;
-        // 사물함 열린 상태 등의 그래픽 예외 원상복구 연동
-        if (savedIt.name === "열린 사물함" && realItem.name === "사물함") {
-          realItem.img = char2; 
-          realItem.name = "열린 사물함"; 
-          realItem.yRatio = 0.37;
-        }
+
+      let realItem = items.find(it =>
+        it.name === savedIt.name ||
+        (
+          savedIt.name === "열린 사물함" &&
+          it.name === "사물함"
+        )
+      );
+
+      if (!realItem) return;
+
+      realItem.room =
+        savedIt.room;
+
+      realItem.isCollected =
+        savedIt.isCollected;
+
+      if (
+        savedIt.name === "열린 사물함"
+      ) {
+        realItem.name =
+          "열린 사물함";
+
+        realItem.img =
+          char2;
+
+        realItem.yRatio =
+          0.37;
       }
     });
   }
 
-  // 3. 인벤토리 복구
+  // 인벤토리 복구
   inventory = [];
+
   if (saveObj.inventoryNames) {
+
     saveObj.inventoryNames.forEach(name => {
-      // items 데이터셋이나 임의의 수집 구조에서 원본 객체를 찾아 인벤토리에 다시 주입
-      let matchItem = items.find(it => it.name === name);
-      if (matchItem) {
-        inventory.push(matchItem);
+
+      let item =
+        items.find(it => it.name === name);
+
+      if (item) {
+        inventory.push(item);
       }
     });
   }
 
-  // 4. 화면 갱신 및 상태 전환
-  if (typeof updatePositions === 'function') updatePositions();
+  revealedLength = 0;
+  lastTypeTime = millis();
+
+  updatePositions();
+
   gameState = "GAME_PLAY";
 }
