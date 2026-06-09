@@ -1,4 +1,5 @@
 // 이미지, 사운드 변수
+let gameFont;
 let bgImg, menuBtnImg1, menuBtnImg2;
 let introImgs = [];
 const totalIntroImgs = 6;
