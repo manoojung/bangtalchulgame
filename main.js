@@ -12,7 +12,7 @@ function preload(){
   bgImg = loadImage('images/게임 오프닝 화면.png'); 
   menuBtnImg1 = loadImage('images/놀이방법.png');   
   menuBtnImg2 = loadImage('images/놀이시작.png');  
-  gameFont = loadFont('images/ChosunCentennial_ttf');
+  gameFont = loadFont('images/ChosunCentennial_ttf.ttf');
   for (let i = 0; i < totalIntroImgs; i++) {
     introImgs[i] = loadImage('images/오프닝일러' + i + '.png');
   }
