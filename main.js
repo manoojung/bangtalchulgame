@@ -77,7 +77,7 @@ function preload(){
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  textFont('조선100년체');
+  textFont(gameFont);
   initItems(); 
   initSparkles(); 
   updatePositions(); 
